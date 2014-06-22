@@ -1,0 +1,17 @@
+<div id="controls">
+  <div id="add">+</div>
+  <div id="remove">-</div>
+</div>
+
+<div id="notes"></div>
+
+<script id="note-tmpl" type="text/x-template">
+  <div>
+  <textarea
+    class="note"
+    style="left: {{ x position }}px; top: {{ y position }}px;"
+    data-noteid="{{ id }}"
+  >{{ text }}</textarea>
+  </div>
+</script>
+

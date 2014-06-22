@@ -8,10 +8,14 @@ gem 'jquery-rails'
 gem 'turbolinks'
 gem 'jbuilder', '~> 2.0'
 gem 'sdoc', '~> 0.4.0',          group: :doc
-gem 'spring',        group: :development
 
 gem 'mongo_mapper'
 gem 'bson_ext'
+
+group :development do
+  gem 'pry'
+  gem 'spring'
+end
 
 # Use unicorn as the app server
 # gem 'unicorn'
