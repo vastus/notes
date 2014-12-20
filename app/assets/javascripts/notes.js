@@ -47,8 +47,6 @@ $(document).ready(function () {
   function addNote(note) {
     var html = template(note, '#note-tmpl');
     container.append(html);
-    console.log($(html));
-    debug("Note added.", note);
   }
 
   function addNotes(notes) {
@@ -91,6 +89,41 @@ $(document).ready(function () {
     return note;
   }
 
+  function editNote() {
+    var IDLE = 42;
+    var TYPE = 69;
+    var TRESHOLD = 700;
+
+    var mode = IDLE;
+    var startTime = 0;
+
+    return function (e) {
+      var ts = Date.now();
+      var elem = $(this);
+
+      if (mode === IDLE) {
+        mode = TYPE;
+        startTime = ts;
+        console.log('started...');
+      }
+
+      // Typing -- keep goin'
+      if ((mode == TYPE) && (ts - startTime) < TRESHOLD) {
+        console.log('typing...');
+        startTime = ts;
+      }
+
+      // Timed action
+      setTimeout(function () {
+        var delta = Date.now() - startTime;
+        if (delta > TRESHOLD) {
+          mode = IDLE;
+          updateNote(elem);
+        }
+      }, TRESHOLD);
+    };
+  }
+
   function updateNote(elem) {
     var note = buildNote(elem);
     Notes.update(note.id, note).fail(xhrFail);
@@ -99,6 +132,7 @@ $(document).ready(function () {
   // Listeners
   controls.add.on('click', newNote);
   $('#notes').on('mousedown', '.note', moveNote);
+  $('#notes').on('keypress', '.note', editNote());
 
 });
 
