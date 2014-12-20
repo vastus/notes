@@ -1,14 +1,15 @@
 body {
-    color: #333;
+    background: #1e1e1e;
     font-family: helvetica, sans-serif;
 }
 #controls {
     cursor: pointer;
 }
 
-#add,
-#remove {
-    font-size: 3em;
+#add {
+    color: #eee;
+    font-size: 5em;
+    display: inline-block;
 }
 
 #notes {
@@ -26,18 +27,24 @@ body {
     min-width: 13em;
     min-height: 10em;
     border: none;
-    box-shadow: 2px 2px 5px #666;
+    box-shadow: 2px 2px 8px #333;
     font-size: 0.9em;
     font-family: helvetica, arial, sans-serif;
 }
 
+#remove-area {
+    top: 0;
+    right: 0;
+    bottom: 0;
+    position: fixed;
+    margin-top: -5em;
+    padding: .3em 1em 1em 1em;
+    border-left: 3px solid #c0c0c0;
 
-.disabled {
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
+    .sign {
+        color: #eee;
+        font-size: 5em;
+        text-align: center;
+    }
 }
 

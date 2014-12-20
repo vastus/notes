@@ -2,15 +2,6 @@ $(document).ready(function () {
 
     var DEBUG = true;
 
-    // Setup
-    Handlebars.registerHelper('x', function getPosX(note) {
-        return note[0]
-    });
-
-    Handlebars.registerHelper('y', function getPosY(note) {
-        return note[1]
-    });
-
     // Note
     var Notes = {
         defaults: {
@@ -69,12 +60,7 @@ $(document).ready(function () {
     function newNote(e) {
         var createNote = Notes.create();
         createNote.done(addNote);
-        createNote.fail(xhFail);
-    }
-
-    function editNote(e) {
-        $(this).removeAttr('disabled');
-        console.log(this);
+        createNote.fail(xhrFail);
     }
 
     function moveNote(e) {
@@ -94,38 +80,20 @@ $(document).ready(function () {
         });
     }
 
-    function updateNote(elem) {
-        console.log(elem.value);
+    function buildNote(elem) {
         var note = {
-            text: elem.text(),
-            position: [parseInt(elem.css('left')), parseInt(elem.css('top'))]
-        }
-        var id = elem.data('noteid');
-        var update = Notes.update(id, note);
-        update.done(function (data) {
-            console.log("Note updated.", data);
-        });
-        update.fail(xhrFail);
+            id: elem.data('noteid'),
+            text: elem.val(),
+            position: [
+                parseInt(elem.css('left')),
+                parseInt(elem.css('top'))]
+        };
+        return note;
     }
 
-    // Helpers
-    function xhrFail(xhr, textStatus, errorMsg) {
-        if (debug) {
-            alert(
-                xhr.status + " - " + xhr.statusText + "\n\n" +
-                xhr.responseText
-            );
-        }
-    }
-
-    function debug(msg, obi) {
-        DEBUG ? console.log(msg, obi) : null;
-    }
-
-    function template(obi, selector) {
-        var src = $(selector).html();
-        var tmpl = Handlebars.compile(src);
-        return tmpl(obi);
+    function updateNote(elem) {
+        var note = buildNote(elem);
+        Notes.update(note.id, note).fail(xhrFail);
     }
 
     // Listeners
