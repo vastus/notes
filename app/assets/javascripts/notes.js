@@ -88,7 +88,6 @@ $(document).ready(function () {
         noteElem.css({ 'background': 'red' });
         noteElem.data('remove', true);
       } else if (noteElem.data('remove') && remAreaPos.left - right > 0) {
-        console.log('hiihaaa');
         noteElem.css({ 'background': bg });
         noteElem.data('remove', false);
       }
