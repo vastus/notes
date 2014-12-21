@@ -89,38 +89,39 @@ $(document).ready(function () {
     return note;
   }
 
-  var IDLE = 42;
-  var TYPE = 69;
-  var TRESHOLD = 700;
+  function editNote() {
+    var IDLE = 42;
+    var TYPE = 69;
+    var TRESHOLD = 700;
 
-  var mode = IDLE;
-  var startTime = 0;
+    var mode = IDLE;
+    var startTime = 0;
 
-  function editNote(e) {
-    var elem = $(this);
+    return function (e) {
+      var ts = Date.now();
+      var elem = $(this);
 
-    var ts = Date.now();
-
-    if (mode === IDLE) {
-      mode = TYPE;
-      startTime = ts;
-      console.log('started...');
-    }
-
-    // Typing -- keep goin'
-    if ((mode == TYPE) && (ts - startTime) < TRESHOLD) {
-      console.log('typing...');
-      startTime = ts;
-    }
-
-    // Timed action
-    setTimeout(function () {
-      var delta = Date.now() - startTime;
-      if (delta > TRESHOLD) {
-        mode = IDLE;
-        updateNote(elem);
+      if (mode === IDLE) {
+        mode = TYPE;
+        startTime = ts;
+        console.log('started...');
       }
-    }, TRESHOLD);
+
+      // Typing -- keep goin'
+      if ((mode == TYPE) && (ts - startTime) < TRESHOLD) {
+        console.log('typing...');
+        startTime = ts;
+      }
+
+      // Timed action
+      setTimeout(function () {
+        var delta = Date.now() - startTime;
+        if (delta > TRESHOLD) {
+          mode = IDLE;
+          updateNote(elem);
+        }
+      }, TRESHOLD);
+    };
   }
 
   function updateNote(elem) {
@@ -131,7 +132,7 @@ $(document).ready(function () {
   // Listeners
   controls.add.on('click', newNote);
   $('#notes').on('mousedown', '.note', moveNote);
-  $('#notes').on('keypress', '.note', editNote);
+  $('#notes').on('keypress', '.note', editNote());
 
 });
 
