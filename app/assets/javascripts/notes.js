@@ -28,6 +28,12 @@ $(document).ready(function () {
         data: { note: noteAttrs },
         dataType: 'json'
       });
+    },
+    destroy: function (id) {
+      return $.ajax('/notes/' + id, {
+        type: 'DELETE',
+        dataType: 'json'
+      });
     }
   };
 
@@ -63,18 +69,32 @@ $(document).ready(function () {
 
   function moveNote(e) {
     var noteElem = $(this);
+    var $removeArea = $('#remove-area');
+    var remAreaPos = $removeArea.position();
     var doc = $(document);
     var offset = [parseInt(noteElem.css('left')), parseInt(noteElem.css('top'))];
     var startPos = [e.pageX, e.pageY];
+    var bg = noteElem.css('background');
     doc.on('mousemove', function (e) {
       noteElem.css({
         'left': (e.pageX - startPos[0] + offset[0]),
         'top': (e.pageY - startPos[1] + offset[1])
       });
+
+      var width = noteElem.width();
+      var right = parseInt(noteElem.css('left')) + width;
+
+      if (remAreaPos.left - right <= 0) {
+        noteElem.css({ 'background': 'red' });
+        noteElem.data('remove', true);
+      } else if (noteElem.data('remove') && remAreaPos.left - right > 0) {
+        noteElem.css({ 'background': bg });
+        noteElem.data('remove', false);
+      }
     });
     doc.one('mouseup', function () {
       doc.off('mousemove');
-      updateNote(noteElem);
+      noteElem.data('remove') ? removeNote(noteElem) : updateNote(noteElem);
     });
   }
 
@@ -127,6 +147,12 @@ $(document).ready(function () {
   function updateNote(elem) {
     var note = buildNote(elem);
     Notes.update(note.id, note).fail(xhrFail);
+  }
+
+  function removeNote(elem) {
+    Notes.destroy(elem.data('noteid'))
+      .done(elem.remove())
+      .fail(xhrFail);
   }
 
   // Listeners
